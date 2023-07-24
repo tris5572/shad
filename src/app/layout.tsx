@@ -1,18 +1,26 @@
-import './globals.css'
+import { Metadata } from 'next';
+import './globals.css';
+import Nav from './nav';
+
+export const metadata: Metadata = {
+  title: 'Shad',
+  description: 'GPXファイルの斜度を可視化するWebアプリ',
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
+    <html lang="ja">
       <head />
-      <body>{children}</body>
+      <body>
+        <div id="app-wrapper">
+          <Nav />
+          {children}
+        </div>
+      </body>
     </html>
-  )
+  );
 }
