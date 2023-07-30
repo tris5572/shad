@@ -1,12 +1,12 @@
 import { create } from 'zustand';
-import { PointData } from './types';
-import { gpxToPoints } from './gpx';
+import { PointData, RouteData } from './types';
+import { gpxToData } from './gpx';
 
 export type AppState = {
   /**
    * GPXファイルの中身をデータ化したもの。
    */
-  gpxData: PointData[];
+  gpxData: RouteData | undefined;
 
   /**
    * 設定されたGPXファイルの中身。
@@ -22,12 +22,12 @@ export type AppState = {
 };
 
 export const useAppStore = create<AppState>((set) => ({
-  gpxData: [],
+  gpxData: undefined,
   gpxFile: '',
 
   setGpxFile: (gpx: string) => {
     // GPXファイルをパースしてデータ化する。
-    const data = gpxToPoints(gpx);
+    const data = gpxToData(gpx);
     if (data == undefined) {
       return false;
     }

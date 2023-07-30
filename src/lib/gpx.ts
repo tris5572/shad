@@ -1,12 +1,12 @@
 import { XMLParser } from 'fast-xml-parser';
-import { PointData } from './types';
+import { PointData, RouteData } from './types';
 
 /**
  *
  * @param gpx GPXファイルの中身の文字列
  * @returns 座標データの配列。生成できなかった場合は undefined
  */
-export function gpxToPoints(gpx: string): PointData[] | undefined {
+export function gpxToData(gpx: string): RouteData | undefined {
   const array: PointData[] = [];
 
   // パース時のオプション。trkpt の lat と lon を取得するために指定。
@@ -23,6 +23,11 @@ export function gpxToPoints(gpx: string): PointData[] | undefined {
   }
 
   const points = jsonObj.gpx.trk.trkseg.trkpt;
+  let totalDistance = 0;
+  let totalAscent = 0;
+  let totalDescent = 0;
+  let minElevation = 9999999;
+  let maxElevation = -9999999;
 
   for (let i = 0; i < points.length; i++) {
     const p = points[i];
@@ -33,6 +38,15 @@ export function gpxToPoints(gpx: string): PointData[] | undefined {
     const dist =
       i === 0 ? 0 : calcDistance(lat, lng, array[i - 1].lat, array[i - 1].lng);
 
+    totalDistance += dist;
+    minElevation = Math.min(minElevation, ele);
+    maxElevation = Math.max(maxElevation, ele);
+    if (0 < eleDiff) {
+      totalAscent += eleDiff;
+    } else {
+      totalDescent += eleDiff;
+    }
+
     array.push({
       lat,
       lng,
@@ -42,7 +56,14 @@ export function gpxToPoints(gpx: string): PointData[] | undefined {
     });
   }
 
-  return array;
+  return {
+    data: array,
+    totalDistance,
+    minElevation,
+    maxElevation,
+    totalAscent,
+    totalDescent,
+  };
 }
 
 // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -90,11 +111,13 @@ export function calcDistance(
  * @param data 座標データ<PointData[]>
  * @returns GeoJSONのデータ
  */
-export function geojsonFromData(data: PointData[]) {
+export function geojsonFromData(data?: PointData[]) {
   const coods = [];
 
-  for (const d of data) {
-    coods.push([d.lng, d.lat]);
+  if (data != null) {
+    for (const d of data) {
+      coods.push([d.lng, d.lat]);
+    }
   }
 
   const json = {

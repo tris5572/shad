@@ -5,3 +5,12 @@ export type PointData = {
   eleDiff: number; // 前の座標との標高の差分。登りならプラス、下りならマイナス
   dist: number; // 前の座標との距離(メートル)
 };
+
+export type RouteData = {
+  data: PointData[];
+  minElevation: number;
+  maxElevation: number;
+  totalDistance: number;
+  totalAscent: number;
+  totalDescent: number;
+};

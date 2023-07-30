@@ -25,21 +25,23 @@ const routeLayer: LayerProps = {
 
 export default function MapView() {
   const routeData = useAppStore((state) => state.gpxData);
-  const geojson = geojsonFromData(routeData);
+  const geojson = geojsonFromData(routeData?.data);
 
   return (
-    <Map
-      initialViewState={{
-        longitude: 138.7,
-        latitude: 36.3,
-        zoom: 7,
-      }}
-      style={{ width: '100%', height: '100dvh' }}
-      mapStyle={mapStyle as StyleSpecification}
-    >
-      <Source type="geojson" data={geojson}>
-        <Layer {...routeLayer} />
-      </Source>
-    </Map>
+    <div className={styles.map}>
+      <Map
+        initialViewState={{
+          longitude: 138.7,
+          latitude: 36.3,
+          zoom: 7,
+        }}
+        style={{ width: '100%', height: '100%' }}
+        mapStyle={mapStyle as StyleSpecification}
+      >
+        <Source type="geojson" data={geojson}>
+          <Layer {...routeLayer} />
+        </Source>
+      </Map>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { gpxToPoints } from './gpx';
+import { gpxToData } from './gpx';
 
 describe('gpxToPoints()', () => {
   it('正常ケース', () => {
@@ -46,7 +46,7 @@ describe('gpxToPoints()', () => {
   </trk>
 </gpx>
     `;
-    const data = gpxToPoints(gpx)!;
+    const data = gpxToData(gpx)!;
     expect(data.length).toBe(3);
     expect(data[0].lat).toBeCloseTo(35.6814833);
     expect(data[0].lng).toBeCloseTo(139.7659831);
@@ -69,7 +69,7 @@ describe('gpxToPoints()', () => {
 
   it('非GPXファイルケース', () => {
     const gpx = 'This file is not GPX.';
-    const data = gpxToPoints(gpx);
+    const data = gpxToData(gpx);
     expect(data).toBeUndefined();
   });
 });

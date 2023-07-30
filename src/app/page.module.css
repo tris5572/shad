@@ -3,3 +3,9 @@
   width: 100%;
   display: flex;
 }
+
+.mapWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
