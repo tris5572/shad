@@ -1,0 +1,11 @@
+.box {
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  font-size: x-small;
+  padding: 4px;
+  text-align: center;
+}
+
+.over {
+  background: rgb(180, 219, 216);
+}
