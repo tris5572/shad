@@ -35,10 +35,15 @@ export function gpxToData(gpx: string): RouteData | undefined {
     const lng = Number(p['@_lon']);
     const ele = p['ele'] ? Number(p['ele']) : 0;
     const eleDiff = i === 0 ? 0 : ele - array[i - 1].ele;
-    const dist =
+    const distDiff =
       i === 0 ? 0 : calcDistance(lat, lng, array[i - 1].lat, array[i - 1].lng);
+    const dist =
+      i === 0
+        ? 0
+        : array[i - 1].dist +
+          calcDistance(lat, lng, array[i - 1].lat, array[i - 1].lng);
 
-    totalDistance += dist;
+    totalDistance += distDiff;
     minElevation = Math.min(minElevation, ele);
     maxElevation = Math.max(maxElevation, ele);
     if (0 < eleDiff) {
@@ -52,6 +57,7 @@ export function gpxToData(gpx: string): RouteData | undefined {
       lng,
       ele,
       eleDiff,
+      distDiff,
       dist,
     });
   }

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from './page.module.css';
 
-import Controller from './controller';
+import ControllerView from './controllerView';
 import MapView from './mapView';
 import Elevation from './elevation';
 
@@ -17,7 +17,7 @@ export default function App() {
         <MapView />
         <Elevation />
       </div>
-      <Controller />
+      <ControllerView />
     </main>
   );
 }
