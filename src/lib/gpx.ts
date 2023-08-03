@@ -142,3 +142,43 @@ export function geojsonFromData(data?: PointData[]) {
 
   return json;
 }
+
+/**
+ * 座標のデータのリストで、指定したインデックスの範囲内からGeoJSONを生成する。
+ * @param data 座標データ<PointData[]>
+ * @param start 開始インデックス
+ * @param end 終了インデックス
+ * @returns GeoJSONのデータ
+ */
+export function geojsonFromDataInRange(
+  data: PointData[] | undefined,
+  start: number,
+  end: number
+) {
+  const coods = [];
+
+  if (data != null) {
+    for (let i = 0; i < data.length; i++) {
+      if (start <= i && i <= end) {
+        const d = data[i];
+        coods.push([d.lng, d.lat]);
+      }
+    }
+  }
+
+  const json = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          coordinates: coods,
+          type: 'LineString',
+        },
+      },
+    ],
+  };
+
+  return json;
+}

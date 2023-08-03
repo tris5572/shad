@@ -5,27 +5,43 @@ import Map, { Layer, LayerProps, Source } from 'react-map-gl/maplibre';
 import { StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useAppStore } from '@/lib/store';
-import { geojsonFromData } from '@/lib/gpx';
+import { geojsonFromData, geojsonFromDataInRange } from '@/lib/gpx';
 
 const LINE_KEY = 'route-line';
 
-const routeLayer: LayerProps = {
-  id: LINE_KEY,
-  type: 'line',
-  source: LINE_KEY,
-  layout: {
-    'line-join': 'round',
-    'line-cap': 'round',
-  },
-  paint: {
-    'line-color': '#F88',
-    'line-width': 4,
-  },
-};
-
 export default function MapView() {
+  const [start, end] = useAppStore((st) => [st.rangeStart, st.rangeEnd]);
+
   const routeData = useAppStore((state) => state.gpxData);
   const geojson = geojsonFromData(routeData?.data);
+  const geojsonInRange = geojsonFromDataInRange(routeData?.data, start, end);
+
+  let allRouteLayer: LayerProps = {
+    id: 'all-route',
+    type: 'line',
+    source: LINE_KEY,
+    layout: {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
+    paint: {
+      'line-color': '#0005',
+      'line-width': 4,
+    },
+  };
+  let inRangeLayer: LayerProps = {
+    id: 'in-range',
+    type: 'line',
+    source: LINE_KEY,
+    layout: {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
+    paint: {
+      'line-color': '#F88',
+      'line-width': 6,
+    },
+  };
 
   return (
     <div className={styles.map}>
@@ -39,7 +55,10 @@ export default function MapView() {
         mapStyle={mapStyle as StyleSpecification}
       >
         <Source type="geojson" data={geojson}>
-          <Layer {...routeLayer} />
+          <Layer {...allRouteLayer} />
+        </Source>
+        <Source type="geojson" data={geojsonInRange}>
+          <Layer {...inRangeLayer} />
         </Source>
       </Map>
     </div>
