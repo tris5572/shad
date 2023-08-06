@@ -143,6 +143,8 @@ export function geojsonFromData(data?: PointData[]) {
   return json;
 }
 
+// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
 /**
  * 座標のデータのリストで、指定したインデックスの範囲内からGeoJSONを生成する。
  * @param data 座標データ<PointData[]>

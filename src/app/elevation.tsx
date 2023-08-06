@@ -86,8 +86,8 @@ function drawLine(
   minEle: number,
   maxEle: number
 ) {
-  const result = [];
-  const points = [];
+  const result: JSX.Element[] = [];
+  const points: [number, number][] = [];
 
   // 標高の線を描画
   for (const d of data.data) {
