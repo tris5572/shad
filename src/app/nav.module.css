@@ -1,0 +1,20 @@
+.nav {
+  padding: 4px;
+}
+
+.pageList {
+  list-style-type: none;
+}
+
+.listItem {
+  padding: 2px 8px;
+  text-align: center;
+  border-top: 2px solid hsl(185, 25%, 90%);
+  border-bottom: 2px solid hsl(185, 25%, 90%);
+  margin: 16px 0;
+  white-space: nowrap;
+}
+
+.selectedItem {
+  border-color: hsl(185, 25%, 50%);
+}

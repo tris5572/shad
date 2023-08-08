@@ -47,6 +47,7 @@ export default function MapView() {
   return (
     <div className={styles.map}>
       <Map
+        reuseMaps
         initialViewState={{
           longitude: 138.7,
           latitude: 36.3,
