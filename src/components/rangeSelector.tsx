@@ -12,15 +12,15 @@ export default function RangeSelector() {
     state.rangeEnd,
     state.setRangeEnd,
   ]);
-  const rangeMax = useAppStore((state) => state.gpxData?.data.length) || 1;
+  const rangeMax = useAppStore((state) => state.gpxData?.points.length) || 1;
   const gpxData = useAppStore((state) => state.gpxData);
 
   let kmStart = '???';
   let kmEnd = '???';
   if (gpxData) {
     // const st = useAppStore((state)=>state.gpxData?.data[rangeStart])
-    const st = gpxData.data[rangeStart].dist;
-    const en = gpxData.data[rangeEnd].dist;
+    const st = gpxData.points[rangeStart].dist;
+    const en = gpxData.points[rangeEnd].dist;
     kmStart = `${(st / 1000).toFixed(3)}km`;
     kmEnd = `${(en / 1000).toFixed(3)}km`;
   }

@@ -14,8 +14,8 @@ export default function MapView() {
   const [start, end] = useAppStore((st) => [st.rangeStart, st.rangeEnd]);
 
   const routeData = useAppStore((state) => state.gpxData);
-  const geojson = geojsonFromData(routeData?.data);
-  const geojsonInRange = geojsonFromDataInRange(routeData?.data, start, end);
+  const geojson = geojsonFromData(routeData?.points);
+  const geojsonInRange = geojsonFromDataInRange(routeData?.points, start, end);
 
   let allRouteLayer: LayerProps = {
     id: 'all-route',
@@ -75,7 +75,7 @@ export default function MapView() {
  */
 function MapInner() {
   const { current: map } = useMap();
-  const data = useAppStore((state) => state.gpxData?.data);
+  const data = useAppStore((state) => state.gpxData?.points);
 
   if (data != undefined) {
     const bounds = getBounds(data);

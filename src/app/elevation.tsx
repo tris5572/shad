@@ -90,7 +90,7 @@ function drawLine(
   const points: [number, number][] = [];
 
   // 標高の線を描画
-  for (const d of data.data) {
+  for (const d of data.points) {
     const x = startX + (endX - startX) * (d.dist / data.totalDistance);
     const y = endY - (endY - startY) * ((d.ele - minEle) / (maxEle - minEle));
     points.push([x, y]);
@@ -155,9 +155,9 @@ function drawSelectedArea(
   const points: [number, number][] = [];
 
   // 選択エリアの標高を描画。範囲の追加では、一応閉じておく。
-  for (let i = 0; i < data.data.length; i++) {
+  for (let i = 0; i < data.points.length; i++) {
     if (rangeStart <= i && i <= rangeEnd) {
-      const d = data.data[i];
+      const d = data.points[i];
       const x = startX + (endX - startX) * (d.dist / data.totalDistance);
       const y = endY - (endY - startY) * ((d.ele - minEle) / (maxEle - minEle));
       points.push([x, y]);

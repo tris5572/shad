@@ -26,9 +26,11 @@ export type AppState = {
 
   setRangeStart: (index: number) => void;
   setRangeEnd: (index: number) => void;
+
+  routeDataInRange: () => RouteData | undefined;
 };
 
-export const useAppStore = create<AppState>((set) => ({
+export const useAppStore = create<AppState>((set, get) => ({
   gpxData: undefined,
   gpxFile: '',
   rangeStart: 0,
@@ -46,7 +48,7 @@ export const useAppStore = create<AppState>((set) => ({
         gpxFile: gpx,
         gpxData: data,
         rangeStart: 0,
-        rangeEnd: data.data.length - 1,
+        rangeEnd: data.points.length - 1,
       };
     });
     return true;
@@ -63,4 +65,49 @@ export const useAppStore = create<AppState>((set) => ({
       rangeEnd: index,
     }));
   },
+
+  routeDataInRange: () => {
+    const data = get().gpxData;
+    if (data == undefined) {
+      return undefined;
+    }
+    const start = get().rangeStart;
+    const end = get().rangeEnd;
+    return routeDataInRangePrivate(data, start, end);
+  },
 }));
+
+function routeDataInRangePrivate(
+  data: RouteData,
+  start: number,
+  end: number
+): RouteData {
+  const array: PointData[] = [];
+  let minElevation = 99999;
+  let maxElevation = -99999;
+  let totalDistance = 0;
+  let totalAscent = 0;
+  let totalDescent = 0;
+
+  for (let i = start; i <= end; i++) {
+    const p = data.points[i];
+    array.push(p);
+    totalDistance += p.distDiff;
+    minElevation = Math.min(minElevation, p.ele);
+    maxElevation = Math.max(maxElevation, p.ele);
+    if (0 < p.eleDiff) {
+      totalAscent += p.eleDiff;
+    } else {
+      totalDescent -= p.eleDiff;
+    }
+  }
+
+  return {
+    points: array,
+    minElevation,
+    maxElevation,
+    totalDistance,
+    totalAscent,
+    totalDescent,
+  };
+}

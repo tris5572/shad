@@ -63,7 +63,7 @@ export function gpxToData(gpx: string): RouteData | undefined {
   }
 
   return {
-    data: array,
+    points: array,
     totalDistance,
     minElevation,
     maxElevation,
