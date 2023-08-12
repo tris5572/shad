@@ -43,7 +43,7 @@ export default function MapView() {
  */
 function MapInner() {
   const { current: map } = useMap();
-  const data = useAppStore((state) => state.gpxData?.points);
+  const data = useAppStore((st) => st.routeDataInRange()?.points);
 
   if (data != undefined) {
     const bounds = getBounds(data);
@@ -76,16 +76,34 @@ function GradationLayer(props: { points: PointData[]; geojson: any }) {
     return 'lightyellow';
   };
 
+  // 複数地点をまとめて斜度を計算するための値。暫定実装。
+  const groupCount = 10;
+
   const array = [];
   const points = props.points;
 
   const firstDist = points[0].dist;
   const totalDist = points[points.length - 1].dist - firstDist;
 
-  for (const p of points) {
-    const d = (p.dist - firstDist) / totalDist;
-    const s = (p.eleDiff * 100) / p.distDiff;
-    array.push(d, colorFrom(s));
+  let count = 0;
+  let sumDist = 0;
+  let sumEle = 0;
+
+  for (let i = 0; i < points.length; i++) {
+    const p = points[i];
+    sumDist += p.distDiff;
+    sumEle += p.eleDiff;
+    count++;
+
+    if (count === groupCount || i === points.length - 1) {
+      const d = (p.dist - firstDist) / totalDist;
+      const s = (sumEle * 100) / sumDist;
+      array.push(d, colorFrom(s));
+
+      sumDist = 0;
+      sumEle = 0;
+      count = 0;
+    }
   }
 
   const step: LayerProps = {
