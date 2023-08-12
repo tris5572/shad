@@ -71,9 +71,9 @@ function GradationLayer(props: { points: PointData[]; geojson: any }) {
     } else if (3 <= slope) {
       return 'blue';
     } else if (0.5 < slope) {
-      return 'green';
+      return 'limegreen';
     }
-    return 'yellow';
+    return 'lightyellow';
   };
 
   const array = [];
@@ -88,7 +88,7 @@ function GradationLayer(props: { points: PointData[]; geojson: any }) {
     array.push(d, colorFrom(s));
   }
 
-  const gradient: LayerProps = {
+  const step: LayerProps = {
     id: 'gradient-line',
     type: 'line',
     source: LINE_KEY,
@@ -98,34 +98,14 @@ function GradationLayer(props: { points: PointData[]; geojson: any }) {
     },
     paint: {
       'line-color': 'red',
-      'line-width': 6,
-      'line-gradient': ['interpolate', ['linear'], ['line-progress'], ...array],
+      'line-width': 14,
+      'line-gradient': ['step', ['line-progress'], 'transparent', ...array],
     },
   };
 
-  // const step: LayerProps = {
-  //   id: 'gradient-line',
-  //   type: 'line',
-  //   source: LINE_KEY,
-  //   layout: {
-  //     'line-join': 'round',
-  //     'line-cap': 'round',
-  //   },
-  //   paint: {
-  //     'line-color': 'red',
-  //     'line-width': 14,
-  //     'line-gradient': [
-  //       'interpolate',
-  //       ['exponential', 0.1],
-  //       ['line-progress'],
-  //       ...array,
-  //     ],
-  //   },
-  // };
-
   return (
     <Source type="geojson" data={props.geojson} lineMetrics>
-      <Layer {...gradient} />
+      <Layer {...step} />
     </Source>
   );
 }
