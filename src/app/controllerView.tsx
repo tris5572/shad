@@ -1,4 +1,4 @@
-import RangeSelector from './rangeSelector';
+import RangeSelector from '../components/rangeSelector';
 import styles from './controllerView.module.css';
 import Dropper from './dropper';
 

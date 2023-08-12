@@ -19,13 +19,13 @@ export default function Nav() {
             GPX
           </li>
         </Link>
-        <Link href="/slope">
+        <Link href="/coloredmap">
           <li
             className={`${styles.listItem} ${
-              path == '/slope' ? styles.selectedItem : ''
+              path == '/coloredmap' ? styles.selectedItem : ''
             }`}
           >
-            斜度表示
+            色付き地図
           </li>
         </Link>
       </ul>

@@ -46,13 +46,9 @@ export default function RangeSelector() {
 
   return (
     <div className={styles.box}>
-      <p className={styles.label}>
-        勾配区間:
-        <br />
-        {kmStart} ～ {kmEnd}
-      </p>
+      <p className={styles.label}>表示範囲指定</p>
       <label htmlFor="startPoint" className={styles.rangeLabel}>
-        開始:
+        開始: {kmStart}
       </label>
       <input
         type="range"
@@ -65,7 +61,7 @@ export default function RangeSelector() {
       />
       <br />
       <label htmlFor="endPoint" className={styles.rangeLabel}>
-        終了:
+        終了: {kmEnd}
       </label>
       <input
         type="range"

@@ -32,7 +32,7 @@ export default function Elevation() {
     sizeHandler();
     window.addEventListener('resize', sizeHandler);
     return () => window.removeEventListener('resize', sizeHandler);
-  }, []);
+  }, [sizeHandler]);
 
   // Y軸(標高)の描画範囲を設定。
   // TODO: 最小値と最大値を踏まえて、妥当な値にする。
