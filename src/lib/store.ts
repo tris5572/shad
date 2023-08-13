@@ -27,6 +27,15 @@ export type AppState = {
   setRangeStart: (index: number) => void;
   setRangeEnd: (index: number) => void;
 
+  /**
+   * 表示範囲の開始インデックスを、指定数値だけ増減させる。
+   * @param num 指定数値
+   * @returns
+   */
+  modRangeStart: (num: number) => void;
+
+  modRangeEnd: (num: number) => void;
+
   routeDataInRange: () => RouteData | undefined;
 };
 
@@ -64,6 +73,42 @@ export const useAppStore = create<AppState>((set, get) => ({
     set((state) => ({
       rangeEnd: index,
     }));
+  },
+
+  modRangeStart(num) {
+    const v = get().rangeStart + num;
+    const len = get().gpxData?.points.length;
+    if (len == undefined) {
+      return;
+    }
+    const en = get().rangeEnd;
+    if (len <= v) {
+      set(() => ({ rangeStart: len - 1 }));
+    } else if (en <= v) {
+      set(() => ({ rangeStart: en - 1 }));
+    } else if (v <= 0) {
+      set(() => ({ rangeStart: 0 }));
+    } else {
+      set(() => ({ rangeStart: v }));
+    }
+  },
+
+  modRangeEnd(num) {
+    const v = get().rangeEnd + num;
+    const len = get().gpxData?.points.length;
+    if (len == undefined) {
+      return;
+    }
+    const st = get().rangeStart;
+    if (len <= v) {
+      set(() => ({ rangeEnd: len - 2 }));
+    } else if (v <= st) {
+      set(() => ({ rangeEnd: st + 1 }));
+    } else if (v <= 1) {
+      set(() => ({ rangeEnd: 1 }));
+    } else {
+      set(() => ({ rangeEnd: v }));
+    }
   },
 
   routeDataInRange: () => {

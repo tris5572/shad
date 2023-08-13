@@ -1,8 +1,6 @@
 import { useAppStore } from '@/lib/store';
 import styles from './rangeSelector.module.css';
 
-// TODO: 座標のプラスとマイナスを1個ずつ変えるボタンを付ける。
-
 export default function RangeSelector() {
   const [rangeStart, setRangeStart] = useAppStore((state) => [
     state.rangeStart,
@@ -12,25 +10,22 @@ export default function RangeSelector() {
     state.rangeEnd,
     state.setRangeEnd,
   ]);
+  const [modRangeStart, modRangeEnd] = useAppStore((st) => [
+    st.modRangeStart,
+    st.modRangeEnd,
+  ]);
   const rangeMax = useAppStore((state) => state.gpxData?.points.length) || 1;
   const gpxData = useAppStore((state) => state.gpxData);
 
   let kmStart = '???';
   let kmEnd = '???';
   if (gpxData) {
-    // const st = useAppStore((state)=>state.gpxData?.data[rangeStart])
     const st = gpxData.points[rangeStart].dist;
     const en = gpxData.points[rangeEnd].dist;
-    kmStart = `${(st / 1000).toFixed(3)}km`;
-    kmEnd = `${(en / 1000).toFixed(3)}km`;
+    kmStart = `${(st / 1000).toFixed(2)}km`;
+    kmEnd = `${(en / 1000).toFixed(2)}km`;
   }
 
-  // const handleChangeStart = useMemo(
-  //   () => (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     setRangeStart(Number(e.target.value));
-  //   },
-  //   [setRangeStart]
-  // );
   const handleChangeStart = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = Number(e.target.value);
     if (v < rangeEnd) {
@@ -48,7 +43,21 @@ export default function RangeSelector() {
     <div className={styles.box}>
       <p className={styles.label}>表示範囲指定</p>
       <label htmlFor="startPoint" className={styles.rangeLabel}>
-        開始: {kmStart}
+        開始:
+        <button className={styles.modButton} onClick={() => modRangeStart(-5)}>
+          -5
+        </button>
+        <button className={styles.modButton} onClick={() => modRangeStart(-1)}>
+          -1
+        </button>
+        <button className={styles.modButton} onClick={() => modRangeStart(1)}>
+          +1
+        </button>
+        <button className={styles.modButton} onClick={() => modRangeStart(5)}>
+          +5
+        </button>
+        &nbsp;
+        {kmStart}
       </label>
       <input
         type="range"
@@ -61,7 +70,21 @@ export default function RangeSelector() {
       />
       <br />
       <label htmlFor="endPoint" className={styles.rangeLabel}>
-        終了: {kmEnd}
+        終了:
+        <button className={styles.modButton} onClick={() => modRangeEnd(-5)}>
+          -5
+        </button>
+        <button className={styles.modButton} onClick={() => modRangeEnd(-1)}>
+          -1
+        </button>
+        <button className={styles.modButton} onClick={() => modRangeEnd(1)}>
+          +1
+        </button>
+        <button className={styles.modButton} onClick={() => modRangeEnd(5)}>
+          +5
+        </button>
+        &nbsp;
+        {kmEnd}
       </label>
       <input
         type="range"
