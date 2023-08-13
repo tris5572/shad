@@ -1,4 +1,10 @@
 
-（作成中）👷‍♂
+[Shad](https://shad-app.vercel.app/) は、GPXファイルの斜度(勾配)を可視化するWebアプリです。サイクリングの計画作成等に有用です。
 
-「Shad」は、GPXファイルの斜度を可視化するWebアプリです。
+現時点ではまだ作成中👷‍♂です。
+
+# 技術スタック
+
+- TypeScript
+- Next.js + App Router
+- MapLibre GL JS (+ React Map GL)
