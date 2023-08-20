@@ -177,7 +177,7 @@ export type ColorState = {
 
 export const useColorState = create<ColorState>((set, get) => ({
   delimiters: [0.5, 3, 6, 10],
-  colors: ['#ffff33', '#33cc33', '#0000ff', '#ff0000', '#000000'],
+  colors: ['#dddddd', '#33dd33', '#3333ff', '#ff0000', '#000000'],
 
   colorFromSlope(slope) {
     const deli = get().delimiters;

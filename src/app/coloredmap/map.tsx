@@ -4,11 +4,12 @@ import mapStyle from '../../misc/style.json';
 import Map, { Layer, LayerProps, Source, useMap } from 'react-map-gl/maplibre';
 import { StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import * as chroma from 'chroma.ts';
+
 import { useAppStore, useColorState } from '@/lib/store';
 import { geojsonFromData } from '@/lib/gpx';
 import { getBounds } from '@/lib/util';
 import { PointData } from '@/lib/types';
-import { useCallback } from 'react';
 
 const LINE_KEY = 'route-line';
 
@@ -95,7 +96,29 @@ function GradationLayer(props: { points: PointData[]; geojson: any }) {
     }
   }
 
-  const step: LayerProps = {
+  // きれいなグラデーションになるようにした配列に置き換える。
+  const array2 = beautifulGradient(array);
+  array.splice(0);
+  array.push(...array2);
+
+  // ステップ表示
+  // const step: LayerProps = {
+  //   id: 'gradient-line',
+  //   type: 'line',
+  //   source: LINE_KEY,
+  //   layout: {
+  //     'line-join': 'round',
+  //     'line-cap': 'round',
+  //   },
+  //   paint: {
+  //     'line-color': 'red',
+  //     'line-width': 6,
+  //     'line-gradient': ['step', ['line-progress'], 'transparent', ...array],
+  //   },
+  // };
+
+  // グラデーション表示
+  const gradient: LayerProps = {
     id: 'gradient-line',
     type: 'line',
     source: LINE_KEY,
@@ -106,13 +129,36 @@ function GradationLayer(props: { points: PointData[]; geojson: any }) {
     paint: {
       'line-color': 'red',
       'line-width': 6,
-      'line-gradient': ['step', ['line-progress'], 'transparent', ...array],
+      'line-gradient': ['interpolate', ['linear'], ['line-progress'], ...array],
     },
   };
 
   return (
     <Source type="geojson" data={props.geojson} lineMetrics>
-      <Layer {...step} />
+      {/* <Layer {...step} /> */}
+      <Layer {...gradient} />
     </Source>
   );
+}
+
+// きれいなグラデーションになるよう、点と点の間に色を追加する。
+function beautifulGradient(array: Array<any>): Array<any> {
+  // 元の array は、位置(0.0～1.0)と色が交互に入った配列になっているので注意。
+  const result = [];
+
+  if (array.length <= 2) {
+    return array;
+  }
+
+  result.push(array[0], array[1]);
+
+  for (let i = 2; i < array.length - 1; i += 2) {
+    const d = (array[i - 2] + array[i]) / 2; // 位置の中間
+    const c = chroma.mix(array[i - 1], array[i + 1], 0.5, 'lch').hex();
+
+    result.push(d, c);
+    result.push(array[i], array[i + 1]);
+  }
+
+  return result;
 }
