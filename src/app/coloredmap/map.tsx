@@ -4,10 +4,11 @@ import mapStyle from '../../misc/style.json';
 import Map, { Layer, LayerProps, Source, useMap } from 'react-map-gl/maplibre';
 import { StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { useAppStore } from '@/lib/store';
+import { useAppStore, useColorState } from '@/lib/store';
 import { geojsonFromData } from '@/lib/gpx';
 import { getBounds } from '@/lib/util';
 import { PointData } from '@/lib/types';
+import { useCallback } from 'react';
 
 const LINE_KEY = 'route-line';
 
@@ -61,20 +62,8 @@ function MapInner() {
 function GradationLayer(props: { points: PointData[]; geojson: any }) {
   // Layerだけを返す形ではなぜか上手く動かなかったので、Sourceを返す形としている。
 
-  // 勾配から色を返す。
-  // 本来なら設定した値を元に返すべきだが、暫定実装。
-  const colorFrom = (slope: number): string => {
-    if (10 <= slope) {
-      return 'black';
-    } else if (6 <= slope) {
-      return 'red';
-    } else if (3 <= slope) {
-      return 'blue';
-    } else if (0.5 < slope) {
-      return 'limegreen';
-    }
-    return 'lightyellow';
-  };
+  // colors と delimiters が変わった時にもレンダリングされるよう、全部を取得。
+  const { colorFromSlope } = useColorState();
 
   // 複数地点をまとめて斜度を計算するための値。暫定実装。
   const groupCount = 10;
@@ -98,7 +87,7 @@ function GradationLayer(props: { points: PointData[]; geojson: any }) {
     if (count === groupCount || i === points.length - 1) {
       const d = (p.dist - firstDist) / totalDist;
       const s = (sumEle * 100) / sumDist;
-      array.push(d, colorFrom(s));
+      array.push(d, colorFromSlope(s));
 
       sumDist = 0;
       sumEle = 0;
@@ -116,7 +105,7 @@ function GradationLayer(props: { points: PointData[]; geojson: any }) {
     },
     paint: {
       'line-color': 'red',
-      'line-width': 14,
+      'line-width': 6,
       'line-gradient': ['step', ['line-progress'], 'transparent', ...array],
     },
   };

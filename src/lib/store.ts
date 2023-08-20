@@ -156,3 +156,44 @@ function routeDataInRangePrivate(
     totalDescent,
   };
 }
+
+// ======================================================================
+
+export type ColorState = {
+  /** 色の区切りになる斜度 */
+  delimiters: [number, number, number, number];
+  /** 斜度の色。現状では `#rrggbb` の16進表記のみ */
+  colors: [string, string, string, string, string];
+
+  /**
+   * 指定された斜度が該当するカラーコードを返す。
+   * @param slope 斜度
+   * @returns カラーコード
+   */
+  colorFromSlope: (slope: number) => string;
+
+  changeColor: (index: number, color: string) => void;
+};
+
+export const useColorState = create<ColorState>((set, get) => ({
+  delimiters: [0.5, 3, 6, 10],
+  colors: ['#ffff33', '#33cc33', '#0000ff', '#ff0000', '#000000'],
+
+  colorFromSlope(slope) {
+    const deli = get().delimiters;
+    const col = get().colors;
+    for (let i = 0; i < deli.length; i++) {
+      const d = deli[deli.length - i - 1];
+      if (d <= slope) {
+        return col[col.length - 1 - i];
+      }
+    }
+    return col[0];
+  },
+
+  changeColor(index, color) {
+    const colors = get().colors;
+    colors[index] = color;
+    set(() => ({ colors }));
+  },
+}));
