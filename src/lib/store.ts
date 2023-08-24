@@ -122,11 +122,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 }));
 
-function routeDataInRangePrivate(
-  data: RouteData,
-  start: number,
-  end: number
-): RouteData {
+function routeDataInRangePrivate(data: RouteData, start: number, end: number): RouteData {
   const array: PointData[] = [];
   let minElevation = 99999;
   let maxElevation = -99999;
@@ -160,8 +156,12 @@ function routeDataInRangePrivate(
 // ======================================================================
 
 export type ColorState = {
-  /** 色の区切りになる斜度 */
+  /** 色の区切りになる斜度（これは不要かも） */
   delimiters: [number, number, number, number];
+
+  /** 色の区切りになる斜度の文字列。テキストフィールドで入力するために保持する */
+  delimitersString: [string, string, string, string];
+
   /** 斜度の色。現状では `#rrggbb` の16進表記のみ */
   colors: [string, string, string, string, string];
 
@@ -173,10 +173,26 @@ export type ColorState = {
   colorFromSlope: (slope: number) => string;
 
   changeColor: (index: number, color: string) => void;
+
+  /**
+   * 色の区切りになる斜度を設定する。
+   * @param delimiters 区切りのリスト。斜度が緩い方から並べる。
+   * @returns
+   */
+  setDelimiters: (delimiters: [number, number, number, number]) => void;
+
+  /**
+   * 指定されたインデックスの斜度の値を変更する。
+   * @param index インデックス
+   * @param value 斜度の値（string）
+   * @returns すべての斜度が昇順に並んでいるかどうか
+   */
+  changeDelimitersString: (index: number, value: string) => boolean;
 };
 
 export const useColorState = create<ColorState>((set, get) => ({
   delimiters: [0.5, 3, 6, 10],
+  delimitersString: ['0.5', '3', '6', '10'],
   colors: ['#dddddd', '#33dd33', '#3333ff', '#ff0000', '#000000'],
 
   colorFromSlope(slope) {
@@ -195,5 +211,24 @@ export const useColorState = create<ColorState>((set, get) => ({
     const colors = get().colors;
     colors[index] = color;
     set(() => ({ colors }));
+  },
+
+  setDelimiters(delimiters) {
+    set(() => ({ delimiters }));
+  },
+
+  changeDelimitersString(index, value) {
+    const delimiters = get().delimiters;
+    const delimitersString = get().delimitersString;
+    delimitersString[index] = value;
+    delimiters[index] = Number(value);
+    set(() => ({ delimiters, delimitersString }));
+
+    for (let i = 0; i < delimiters.length - 1; i++) {
+      if (delimiters[i + 1] < delimiters[i]) {
+        return false;
+      }
+    }
+    return true;
   },
 }));
