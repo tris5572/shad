@@ -19,11 +19,11 @@ export default function Nav() {
             色付き地図
           </li>
         </Link>
-        <Link href="/draw2">
+        {/* <Link href="/draw2">
           <li className={`${styles.listItem} ${path == '/draw2' ? styles.selectedItem : ''}`}>
             2Dグラフ
           </li>
-        </Link>
+        </Link> */}
       </ul>
       <Dropper />
     </div>

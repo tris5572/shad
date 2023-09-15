@@ -29,16 +29,13 @@ export default function Dropper() {
 
       reader.onload = () => {
         // ファイル読込後の処理
-        // console.log(reader.result);
         const result = reader.result;
         if (result == undefined) {
           return;
         }
         const r = setGpxFile(result.toString());
         if (!r) {
-          console.log(
-            'GPXファイルを表示できませんでした（ファイル内容不正等）'
-          );
+          console.log('GPXファイルを表示できませんでした（ファイル内容不正等）');
         }
       };
 
@@ -71,7 +68,7 @@ export default function Dropper() {
       <div className={styles.box}>
         GPXファイルを
         <br />
-        ここにドロップ
+        ドロップ
       </div>
     </FileDrop>
   );
