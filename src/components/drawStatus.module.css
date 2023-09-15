@@ -1,0 +1,24 @@
+.box {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  padding: 4px;
+}
+
+.label {
+  font-size: small;
+  font-weight: bold;
+}
+
+/* .slider {
+  width: 100%;
+  vertical-align: middle;
+}
+
+.rangeLabel {
+  font-size: small;
+}
+
+.modButton {
+  margin-left: 2px;
+} */

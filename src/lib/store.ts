@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { PointData, RouteData } from './types';
 import { gpxToData } from './gpx';
+import { DistanceUnit } from './constants';
 
 export type AppState = {
   /** GPXファイルの中身をデータ化したもの。 */
@@ -230,5 +231,34 @@ export const useColorState = create<ColorState>((set, get) => ({
       }
     }
     return true;
+  },
+}));
+
+// ======================================================================
+
+export type DrawState = {
+  unit: DistanceUnit;
+  changeUnit: (v: string | number) => void;
+};
+
+export const useDrawState = create<DrawState>((set, get) => ({
+  unit: DistanceUnit.M1000,
+
+  changeUnit(v) {
+    const n = Number(v);
+    switch (n) {
+      case 500:
+        set(() => ({ unit: DistanceUnit.M500 }));
+        break;
+      case 200:
+        set(() => ({ unit: DistanceUnit.M200 }));
+        break;
+      case 100:
+        set(() => ({ unit: DistanceUnit.M100 }));
+        break;
+      default:
+        set(() => ({ unit: DistanceUnit.M1000 }));
+        break;
+    }
   },
 }));
