@@ -6,7 +6,7 @@ export default function ControllerView() {
   return (
     <div className={styles.outer}>
       <ColorSelector />
-      <DrawStatus />
+      {/* <DrawStatus /> */}
     </div>
   );
 }
