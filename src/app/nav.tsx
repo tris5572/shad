@@ -19,8 +19,10 @@ export default function Nav() {
             色付き地図
           </li>
         </Link>
-        <Link href="/draw2">
-          <li className={`${styles.listItem} ${path == '/draw2' ? styles.selectedItem : ''}`}>
+        <Link href="/profile-side">
+          <li
+            className={`${styles.listItem} ${path == '/profile-side' ? styles.selectedItem : ''}`}
+          >
             グラフ横
           </li>
         </Link>
