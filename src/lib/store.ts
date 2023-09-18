@@ -237,11 +237,15 @@ export const useColorState = create<ColorState>((set, get) => ({
 // ======================================================================
 
 export type DrawState = {
+  width: number;
+  height: number;
   unit: DistanceUnit;
   changeUnit: (v: string | number) => void;
 };
 
 export const useDrawState = create<DrawState>((set, get) => ({
+  width: 600,
+  height: 400,
   unit: DistanceUnit.M1000,
 
   changeUnit(v) {
