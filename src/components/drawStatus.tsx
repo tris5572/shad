@@ -1,6 +1,7 @@
 import { DistanceUnit } from '@/lib/constants';
 import styles from './drawStatus.module.css';
 import { useAppStore, useDrawState } from '@/lib/store';
+import { useState } from 'react';
 
 const MARGIN_LEFT = 100;
 const MARGIN_RIGHT = 100;
@@ -9,15 +10,35 @@ const MARGIN_BOTTOM = 100;
 
 export default function DrawStatus() {
   const draw = useDrawState();
+  const [slopeFontSize, setSlopeFontSize] = useState(String(draw.slopeFontSize));
+  const [distanceFontSize, setDistanceFontSize] = useState(String(draw.distanceFontSize));
 
   function unitChanged(e: React.ChangeEvent<HTMLSelectElement>) {
     const v = e.target.value;
     draw.changeUnit(v);
   }
 
+  function slopeFontSizeChanged(e: React.ChangeEvent<HTMLInputElement>) {
+    const v = e.target.value;
+    setSlopeFontSize(v);
+    const n = Number(v);
+    if (n !== 0) {
+      draw.setSlopeFontSize(n);
+    }
+  }
+
+  function distanceFontSizeChanged(e: React.ChangeEvent<HTMLInputElement>) {
+    const v = e.target.value;
+    setDistanceFontSize(v);
+    const n = Number(v);
+    if (n !== 0) {
+      draw.setDistanceFontSize(n);
+    }
+  }
+
   return (
     <div className={styles.box}>
-      <div>
+      {/* <div>
         <label className={styles.label} htmlFor="distance-unit">
           距離単位
         </label>
@@ -30,102 +51,51 @@ export default function DrawStatus() {
       </div>
       <label className={styles.label} htmlFor="start">
         最後から、最初から
-      </label>
+      </label> */}
+      <h2 className={styles.title}>プロフィール</h2>
+      <h3 className={styles.category}>斜度</h3>
+      <div className={styles.inner}>
+        <label className={styles.label}>サイズ</label>
+        <input
+          type="number"
+          id="slope-font-size"
+          value={slopeFontSize}
+          min="6"
+          max="36"
+          size={5}
+          onChange={slopeFontSizeChanged}
+        />
+      </div>
+      <div className={styles.inner}>
+        <label className={styles.label}>色</label>
+        <input
+          type="color"
+          value={draw.slopeColor}
+          onChange={(e) => draw.setSlopeColor(e.currentTarget.value)}
+        />
+      </div>
+      <h3 className={styles.category}>距離</h3>
+      <div className={styles.inner}>
+        <label className={styles.label}>サイズ</label>
+        <input
+          type="number"
+          id="distance-font-size"
+          value={distanceFontSize}
+          min="6"
+          max="36"
+          size={5}
+          onChange={distanceFontSizeChanged}
+        />
+      </div>
+      <div className={styles.inner}>
+        <label className={styles.label}>端数省略</label>
+        <input
+          type="checkbox"
+          id="fraction-omit"
+          checked={draw.fractionOmitFlag}
+          onChange={(e) => draw.setFractionOmitFlag(!draw.fractionOmitFlag)}
+        />
+      </div>
     </div>
   );
-  // const [rangeStart, setRangeStart] = useAppStore((state) => [
-  //   state.rangeStart,
-  //   state.setRangeStart,
-  // ]);
-  // const [rangeEnd, setRangeEnd] = useAppStore((state) => [
-  //   state.rangeEnd,
-  //   state.setRangeEnd,
-  // ]);
-  // const [modRangeStart, modRangeEnd] = useAppStore((st) => [
-  //   st.modRangeStart,
-  //   st.modRangeEnd,
-  // ]);
-  // const rangeMax = useAppStore((state) => state.gpxData?.points.length) || 1;
-  // const gpxData = useAppStore((state) => state.gpxData);
-
-  // let kmStart = '???';
-  // let kmEnd = '???';
-  // if (gpxData) {
-  //   const st = gpxData.points[rangeStart].dist;
-  //   const en = gpxData.points[rangeEnd].dist;
-  //   kmStart = `${(st / 1000).toFixed(2)}km`;
-  //   kmEnd = `${(en / 1000).toFixed(2)}km`;
-  // }
-
-  // const handleChangeStart = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const v = Number(e.target.value);
-  //   if (v < rangeEnd) {
-  //     setRangeStart(v);
-  //   }
-  // };
-  // const handleChangeEnd = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const v = Number(e.target.value);
-  //   if (rangeStart < v) {
-  //     setRangeEnd(v);
-  //   }
-  // };
-
-  // return (
-  //   <div className={styles.box}>
-  //     <p className={styles.label}>表示範囲指定</p>
-  //     <label htmlFor="startPoint" className={styles.rangeLabel}>
-  //       開始:
-  //       <button className={styles.modButton} onClick={() => modRangeStart(-5)}>
-  //         -5
-  //       </button>
-  //       <button className={styles.modButton} onClick={() => modRangeStart(-1)}>
-  //         -1
-  //       </button>
-  //       <button className={styles.modButton} onClick={() => modRangeStart(1)}>
-  //         +1
-  //       </button>
-  //       <button className={styles.modButton} onClick={() => modRangeStart(5)}>
-  //         +5
-  //       </button>
-  //       &nbsp;
-  //       {kmStart}
-  //     </label>
-  //     <input
-  //       type="range"
-  //       id="startPoint"
-  //       className={styles.slider}
-  //       min="0"
-  //       max={rangeMax}
-  //       value={rangeStart}
-  //       onChange={handleChangeStart}
-  //     />
-  //     <br />
-  //     <label htmlFor="endPoint" className={styles.rangeLabel}>
-  //       終了:
-  //       <button className={styles.modButton} onClick={() => modRangeEnd(-5)}>
-  //         -5
-  //       </button>
-  //       <button className={styles.modButton} onClick={() => modRangeEnd(-1)}>
-  //         -1
-  //       </button>
-  //       <button className={styles.modButton} onClick={() => modRangeEnd(1)}>
-  //         +1
-  //       </button>
-  //       <button className={styles.modButton} onClick={() => modRangeEnd(5)}>
-  //         +5
-  //       </button>
-  //       &nbsp;
-  //       {kmEnd}
-  //     </label>
-  //     <input
-  //       type="range"
-  //       id="endPoint"
-  //       className={styles.slider}
-  //       min="0"
-  //       max={rangeMax - 1}
-  //       value={rangeEnd}
-  //       onChange={handleChangeEnd}
-  //     />
-  //   </div>
-  // );
 }

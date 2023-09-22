@@ -1,4 +1,4 @@
-import { useAppStore, useColorState } from '@/lib/store';
+import { DrawState, useAppStore, useColorState, useDrawState } from '@/lib/store';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './elevation2D.module.css';
 import { RouteData } from '@/lib/types';
@@ -9,6 +9,7 @@ export function Draw2View() {
   const [height, setHeight] = useState(0);
 
   const { colorFromSlope } = useColorState();
+  const drawState = useDrawState();
 
   const route = useAppStore((st) => st.routeDataInRange());
 
@@ -40,7 +41,8 @@ export function Draw2View() {
           route.minElevation - 100,
           route.maxElevation + 100,
           1000,
-          colorFromSlope
+          colorFromSlope,
+          drawState
         )}
     </div>
   );
@@ -58,7 +60,8 @@ function createProfile(
   bottomEle: number,
   topEle: number,
   distanceUnit: number,
-  colorFromSlope: (slope: number) => string
+  colorFromSlope: (slope: number) => string,
+  drawState: DrawState
 ) {
   const svg = [];
   const startX = marginX; // 描画範囲の左上
@@ -162,9 +165,10 @@ function createProfile(
       <text
         x={d1.x + (d2.x - d1.x) / 2}
         y={endY - 20}
-        fill="white"
-        fontSize="30px"
+        fill={drawState.slopeColor}
+        fontSize={drawState.slopeFontSize + 'px'}
         style={{ fontWeight: 'bold', textAnchor: 'middle' }}
+        key={`text-slope-${i}`}
       >
         {d2.slope.toFixed(1)}
       </text>
@@ -175,15 +179,23 @@ function createProfile(
   // TODO: 1km単位前提の処理になっているため、後で修正する
   for (let i = 0; i < drawData.length; i++) {
     const d = drawData[i];
+    let t = (d.distance / 1000).toFixed(1);
+    // 端数省略設定時、小数点第一位が「0」だったら省略する。
+    if (drawState.fractionOmitFlag) {
+      if (t.endsWith('.0')) {
+        t = (d.distance / 1000).toFixed(0);
+      }
+    }
     svg.push(
       <text
         x={d.x}
         y={endY + 26}
         fill="black"
-        fontSize="20px"
+        fontSize={drawState.distanceFontSize + 'px'}
         style={{ fontWeight: 'bold', textAnchor: 'middle' }}
+        key={`text-distance-${i}`}
       >
-        {(d.distance / 1000).toFixed(1) + 'km'}
+        {t + 'km'}
       </text>
     );
   }

@@ -240,13 +240,27 @@ export type DrawState = {
   width: number;
   height: number;
   unit: DistanceUnit;
+  slopeFontSize: number;
+  slopeColor: string;
+  distanceFontSize: number;
+  /** 距離の端数を省略するかどうかのフラグ。 */
+  fractionOmitFlag: boolean;
+
   changeUnit: (v: string | number) => void;
+  setSlopeFontSize: (size: number) => void;
+  setSlopeColor: (color: string) => void;
+  setDistanceFontSize: (size: number) => void;
+  setFractionOmitFlag: (flag: boolean) => void;
 };
 
 export const useDrawState = create<DrawState>((set, get) => ({
   width: 600,
   height: 400,
   unit: DistanceUnit.M1000,
+  slopeFontSize: 18,
+  slopeColor: '#FFFFFF',
+  distanceFontSize: 20,
+  fractionOmitFlag: true,
 
   changeUnit(v) {
     const n = Number(v);
@@ -264,5 +278,21 @@ export const useDrawState = create<DrawState>((set, get) => ({
         set(() => ({ unit: DistanceUnit.M1000 }));
         break;
     }
+  },
+
+  setSlopeFontSize(size) {
+    set(() => ({ slopeFontSize: size }));
+  },
+
+  setSlopeColor(color) {
+    set(() => ({ slopeColor: color }));
+  },
+
+  setDistanceFontSize(size) {
+    set(() => ({ distanceFontSize: size }));
+  },
+
+  setFractionOmitFlag(flag) {
+    set(() => ({ fractionOmitFlag: flag }));
   },
 }));

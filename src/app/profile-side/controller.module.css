@@ -2,4 +2,5 @@
   background: #ffffff;
   width: fit-content;
   padding: 4px;
+  min-width: 140px;
 }
