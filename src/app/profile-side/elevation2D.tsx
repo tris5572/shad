@@ -94,7 +94,15 @@ function createProfile(
 
     // 表示範囲の累積距離が次の区切りを超えたとき、追加する。
     if (nextDistance <= totalDistance) {
-      targetData.push({ distance: totalDistance, ele: point.ele });
+      // 直前の座標と比較し、区切りに近い方を追加する。（Issue #9 の対応）
+      const diffPrev = Math.abs(totalDistance - point.distDiff - nextDistance);
+      const diffNow = Math.abs(totalDistance - nextDistance);
+      if (diffNow <= diffPrev) {
+        targetData.push({ distance: totalDistance, ele: point.ele });
+      } else {
+        targetData.push({ distance: totalDistance - point.distDiff, ele: route.points[i - 1].ele });
+      }
+
       nextDistance += distanceUnit;
     }
   }
