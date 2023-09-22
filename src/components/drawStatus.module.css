@@ -2,12 +2,32 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
-  padding: 4px;
+}
+
+.title {
+  font-size: 90%;
+  font-weight: bold;
+  padding-left: 4px;
+  background: #555;
+  color: white;
+}
+
+.category {
+  background: #ccc;
+  font-size: small;
+  font-weight: bold;
 }
 
 .label {
   font-size: small;
-  font-weight: bold;
+  font-weight: normal;
+}
+
+.inner {
+  margin: 2px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* .slider {
