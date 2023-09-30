@@ -203,7 +203,7 @@ function createProfile(
         style={{ fontWeight: 'bold', textAnchor: 'middle' }}
         key={`text-distance-${i}`}
       >
-        {t + 'km'}
+        {t /*+ 'km' */}
       </text>
     );
   }
