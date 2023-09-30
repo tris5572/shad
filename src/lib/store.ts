@@ -246,11 +246,20 @@ export type DrawState = {
   /** 距離の端数を省略するかどうかのフラグ。 */
   fractionOmitFlag: boolean;
 
+  /** 斜めの比率。横幅*比率 を縦の長さとする。 */
+  diagonalRate: number;
+
+  /** 斜め表示の道路のX幅 */
+  diagonalRoadX: number;
+  /** 斜め表示の道路のY幅 */
+  diagonalRoadY: number;
+
   changeUnit: (v: string | number) => void;
   setSlopeFontSize: (size: number) => void;
   setSlopeColor: (color: string) => void;
   setDistanceFontSize: (size: number) => void;
   setFractionOmitFlag: (flag: boolean) => void;
+  setDiagonalRate: (rate: number) => void;
 };
 
 export const useDrawState = create<DrawState>((set, get) => ({
@@ -261,6 +270,9 @@ export const useDrawState = create<DrawState>((set, get) => ({
   slopeColor: '#FFFFFF',
   distanceFontSize: 20,
   fractionOmitFlag: true,
+  diagonalRate: 0.2,
+  diagonalRoadX: 40,
+  diagonalRoadY: 20,
 
   changeUnit(v) {
     const n = Number(v);
@@ -294,5 +306,9 @@ export const useDrawState = create<DrawState>((set, get) => ({
 
   setFractionOmitFlag(flag) {
     set(() => ({ fractionOmitFlag: flag }));
+  },
+
+  setDiagonalRate(rate) {
+    set(() => ({ diagonalRate: rate }));
   },
 }));
