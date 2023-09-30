@@ -26,6 +26,15 @@ export default function Nav() {
             グラフ横
           </li>
         </Link>
+        <Link href="/profile-diagonal">
+          <li
+            className={`${styles.listItem} ${
+              path == '/profile-diagonal' ? styles.selectedItem : ''
+            }`}
+          >
+            グラフ斜め
+          </li>
+        </Link>
       </ul>
       <Dropper />
     </div>
